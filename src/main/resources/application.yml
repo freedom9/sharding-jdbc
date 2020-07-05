@@ -1,0 +1,28 @@
+spring:
+  shardingsphere:
+    datasource:
+      names: ds0,ds1
+      ds0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/user_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+      ds1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/user_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+    masterslave:
+      master-data-source-name: ds0
+      slave-data-source-names: ds1
+      name: ms
+
+    # 打开sql输出日志
+    props:
+      sql:
+        show: true
+  # 一个实体对应两张表，覆盖
+  main:
+    allow-bean-definition-overriding: true

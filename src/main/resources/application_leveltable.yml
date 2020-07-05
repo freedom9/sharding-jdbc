@@ -1,0 +1,31 @@
+spring:
+  shardingsphere:
+    datasource:
+      names: ds0
+      ds0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/course_db_1?serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+    sharding:
+      tables:
+        course:
+          # 指定course表分布情况，表名称是什么
+          actual-data-nodes: ds0.course_$->{1..2}
+          # 表主键的生成策略，雪花算法
+          key-generator:
+            column: id
+            type: SNOWFLAKE
+          # 分片策略，约定id值为偶数添加到course_1表，奇数添加为course_2表
+          table-strategy:
+            inline:
+              sharding-column: id
+              algorithm-expression: course_$->{id % 2 + 1}
+    # 打开sql输出日志
+    props:
+      sql:
+        show: true
+  # 一个实体对应两张表，覆盖
+  main:
+    allow-bean-definition-overriding: true
